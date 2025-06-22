@@ -44,7 +44,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
       avatar,
     });
 
-    res.send(createdUser);
+    res.status(constants.HTTP_STATUS_CREATED).send(createdUser);
   } catch (error: any) {
     if (error instanceof MongooseError.ValidationError) {
       next(new CustomError(constants.HTTP_STATUS_BAD_REQUEST, 'Переданы некорректные данные при создании пользователя'));
@@ -57,8 +57,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
 export const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
   const { name, about } = req.body;
-  // @ts-expect-error временное решение для обхода авторизации
-  const userId = req.user._id;
+  const userId = req.user?._id;
 
   try {
     const updatedUser = await userModel.findByIdAndUpdate(userId, {
@@ -88,8 +87,7 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
 
 export const updateAvatar = async (req: Request, res: Response, next: NextFunction) => {
   const { avatar } = req.body;
-  // @ts-expect-error временное решение для обхода авторизации
-  const userId = req.user._id;
+  const userId = req.user?._id;
 
   try {
     const updatedUser = await userModel.findByIdAndUpdate(userId, {

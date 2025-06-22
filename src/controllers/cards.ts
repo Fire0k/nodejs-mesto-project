@@ -17,8 +17,8 @@ export const getAllCards = async (_req: Request, res: Response, next: NextFuncti
 
 export const createCard = async (req: Request, res: Response, next: NextFunction) => {
   const { name, link } = req.body;
-  // @ts-expect-error временное решение для обхода авторизации
-  const userId = req.user._id;
+
+  const userId = req.user?._id;
 
   try {
     const createdCard = await cardModel.create({
@@ -27,7 +27,7 @@ export const createCard = async (req: Request, res: Response, next: NextFunction
       owner: userId,
     });
 
-    res.send(createdCard);
+    res.status(constants.HTTP_STATUS_CREATED).send(createdCard);
   } catch (error: any) {
     if (error instanceof MongooseError.ValidationError) {
       next(new CustomError(constants.HTTP_STATUS_BAD_REQUEST, 'Переданы некорректные данные при создании карточки'));
@@ -58,8 +58,7 @@ export const deleteCardById = async (req: Request, res: Response, next: NextFunc
 };
 
 export const likeCard = async (req: Request, res: Response, next: NextFunction) => {
-  // @ts-expect-error временное решение для обхода авторизации
-  const userId = req.user._id;
+  const userId = req.user?._id;
 
   try {
     const updatedCard = await cardModel.findByIdAndUpdate(
@@ -89,8 +88,7 @@ export const likeCard = async (req: Request, res: Response, next: NextFunction) 
 };
 
 export const dislikeCard = async (req: Request, res: Response, next: NextFunction) => {
-  // @ts-expect-error временное решение для обхода авторизации
-  const userId = req.user._id;
+  const userId = req.user?._id;
 
   try {
     const updatedCard = await cardModel.findByIdAndUpdate(

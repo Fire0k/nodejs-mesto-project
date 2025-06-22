@@ -17,9 +17,11 @@ app.use('/', router);
 app.use(errorHandler);
 app.use(pageNotFoundHandler);
 
+const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/mestodb' } = process.env
+
 const connect = () => {
-  mongoose.connect(process.env.MONGO_URL as string);
-  app.listen(process.env.PORT);
+  mongoose.connect(MONGO_URL);
+  app.listen(PORT);
 };
 
 connect();
