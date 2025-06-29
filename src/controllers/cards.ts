@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { constants } from 'http2';
 import { Error as MongooseError } from 'mongoose';
 
-import { CustomError } from '../helpers/error-constructor';
+import { BadRequestError, NotFoundError } from '../helpers';
 import cardModel from '../models/card';
 
 export const getAllCards = async (_req: Request, res: Response, next: NextFunction) => {
@@ -30,7 +30,7 @@ export const createCard = async (req: Request, res: Response, next: NextFunction
     res.status(constants.HTTP_STATUS_CREATED).send(createdCard);
   } catch (error: any) {
     if (error instanceof MongooseError.ValidationError) {
-      next(new CustomError(constants.HTTP_STATUS_BAD_REQUEST, 'Переданы некорректные данные при создании карточки'));
+      next(new BadRequestError('Переданы некорректные данные при создании карточки'));
       return;
     }
 
@@ -39,17 +39,18 @@ export const createCard = async (req: Request, res: Response, next: NextFunction
 };
 
 export const deleteCardById = async (req: Request, res: Response, next: NextFunction) => {
+  // TODO: проверка id пользователя
   try {
     const deletedCard = await cardModel.findByIdAndDelete(req.params.cardId);
 
     if (!deletedCard) {
-      throw new CustomError(constants.HTTP_STATUS_NOT_FOUND, 'Карточка с указанным _id не найдена');
+      throw new NotFoundError('Карточка с указанным _id не найдена');
     }
 
     res.send(deletedCard);
   } catch (error: any) {
     if (error instanceof MongooseError.CastError) {
-      next(new CustomError(constants.HTTP_STATUS_NOT_FOUND, 'Карточка с указанным _id не найдена'));
+      next(new NotFoundError('Карточка с указанным _id не найдена'));
       return;
     }
 
@@ -68,18 +69,18 @@ export const likeCard = async (req: Request, res: Response, next: NextFunction) 
     );
 
     if (!updatedCard) {
-      throw new CustomError(constants.HTTP_STATUS_NOT_FOUND, 'Карточка с указанным _id не найдена');
+      throw new NotFoundError('Карточка с указанным _id не найдена');
     }
 
     res.send(updatedCard);
   } catch (error: any) {
     if (error instanceof MongooseError.CastError) {
-      next(new CustomError(constants.HTTP_STATUS_NOT_FOUND, 'Карточка с указанным _id не найдена'));
+      next(new NotFoundError('Карточка с указанным _id не найдена'));
       return;
     }
 
     if (error instanceof MongooseError.ValidationError) {
-      next(new CustomError(constants.HTTP_STATUS_BAD_REQUEST, 'Переданы некорректные данные для постановки/снятии лайка'));
+      next(new BadRequestError('Переданы некорректные данные для постановки/снятии лайка'));
       return;
     }
 
@@ -98,18 +99,18 @@ export const dislikeCard = async (req: Request, res: Response, next: NextFunctio
     );
 
     if (!updatedCard) {
-      throw new CustomError(constants.HTTP_STATUS_NOT_FOUND, 'Карточка с указанным _id не найдена');
+      throw new NotFoundError('Карточка с указанным _id не найдена');
     }
 
     res.send(updatedCard);
   } catch (error: any) {
     if (error instanceof MongooseError.CastError) {
-      next(new CustomError(constants.HTTP_STATUS_NOT_FOUND, 'Карточка с указанным _id не найдена'));
+      next(new NotFoundError('Карточка с указанным _id не найдена'));
       return;
     }
 
     if (error instanceof MongooseError.ValidationError) {
-      next(new CustomError(constants.HTTP_STATUS_BAD_REQUEST, 'Переданы некорректные данные для постановки/снятии лайка'));
+      next(new BadRequestError('Переданы некорректные данные для постановки/снятии лайка'));
       return;
     }
 

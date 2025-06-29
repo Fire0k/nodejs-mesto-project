@@ -8,4 +8,5 @@ const router = Router();
 router.use('/users', usersRouter);
 router.use('/cards', cardsRouter);
 
+export { default as authRouter } from './auth';
 export default router;
