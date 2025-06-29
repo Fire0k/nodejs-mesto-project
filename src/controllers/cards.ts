@@ -2,8 +2,9 @@ import { NextFunction, Request, Response } from 'express';
 import { constants } from 'http2';
 import { Error as MongooseError } from 'mongoose';
 
-import { BadRequestError, NotFoundError } from '../helpers';
+import { BadRequestError, NotFoundError, ForbiddenError } from '../helpers';
 import cardModel from '../models/card';
+import { CARD_ID_PARAM } from '../const';
 
 export const getAllCards = async (_req: Request, res: Response, next: NextFunction) => {
   try {
@@ -39,12 +40,22 @@ export const createCard = async (req: Request, res: Response, next: NextFunction
 };
 
 export const deleteCardById = async (req: Request, res: Response, next: NextFunction) => {
-  // TODO: проверка id пользователя
+  const userId = req.user?._id;
+  const cardId = req.params[CARD_ID_PARAM];
+
   try {
-    const deletedCard = await cardModel.findByIdAndDelete(req.params.cardId);
+    const isCardExist = await cardModel.exists({ _id: cardId });
+    if (!isCardExist) {
+      throw new NotFoundError('Карточка с указанным _id не найдена');
+    }
+
+    const deletedCard = await cardModel.findOneAndDelete({
+      _id: cardId,
+      owner: userId,
+    });
 
     if (!deletedCard) {
-      throw new NotFoundError('Карточка с указанным _id не найдена');
+      throw new ForbiddenError('Невозможно удалить чужую карточку');
     }
 
     res.send(deletedCard);
@@ -63,7 +74,7 @@ export const likeCard = async (req: Request, res: Response, next: NextFunction) 
 
   try {
     const updatedCard = await cardModel.findByIdAndUpdate(
-      req.params.cardId,
+      req.params[CARD_ID_PARAM],
       { $addToSet: { likes: userId } },
       { new: true, runValidators: true },
     );
@@ -93,7 +104,7 @@ export const dislikeCard = async (req: Request, res: Response, next: NextFunctio
 
   try {
     const updatedCard = await cardModel.findByIdAndUpdate(
-      req.params.cardId,
+      req.params[CARD_ID_PARAM],
       { $pull: { likes: userId } },
       { new: true, runValidators: true },
     );

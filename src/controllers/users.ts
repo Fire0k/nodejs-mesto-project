@@ -3,8 +3,9 @@ import { constants } from 'http2';
 import { Error as MongooseError } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-import { NotFoundError, BadRequestError } from '../helpers';
+import { NotFoundError, BadRequestError, ConflictError } from '../helpers';
 import userModel from '../models/user';
+import { USER_ID_PARAM } from '../const';
 
 export const getAllUsers = async (_req: Request, res: Response, next: NextFunction) => {
   try {
@@ -18,7 +19,7 @@ export const getAllUsers = async (_req: Request, res: Response, next: NextFuncti
 
 export const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await userModel.findById(req.params.userId);
+    const user = await userModel.findById(req.params[USER_ID_PARAM]);
 
     if (!user) {
       throw new NotFoundError('Пользователь по указанному _id не найден');
@@ -58,6 +59,11 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
   } catch (error: any) {
     if (error instanceof MongooseError.ValidationError) {
       next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
+      return;
+    }
+
+    if (error.code === 11000) {
+      next(new ConflictError('Пользователь с указанным email уже существует'));
       return;
     }
 
@@ -124,7 +130,7 @@ export const updateAvatar = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-export const getProfile = async (req: Request, res: Response, next: NextFunction) => {
+export const getProfile = async (req: Request, _res: Response, next: NextFunction) => {
   const userId = req.user?._id;
 
   try {

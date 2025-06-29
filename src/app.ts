@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import mongoose from 'mongoose';
+import { errors } from 'celebrate';
 
 import router, { authRouter } from './routes';
 import {
@@ -8,15 +9,25 @@ import {
   errorHandler,
   pageNotFoundHandler,
   authHandler,
+  requestLogger,
+  errorLogger,
 } from './middlewares';
 
 const app = express();
 
 app.use(parseRequest);
+
+app.use(requestLogger);
+
 app.use('/', authRouter);
 app.use(authHandler);
+
 app.use('/', router);
+
+app.use(errorLogger);
+app.use(errors());
 app.use(errorHandler);
+
 app.use(pageNotFoundHandler);
 
 const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/mestodb' } = process.env;

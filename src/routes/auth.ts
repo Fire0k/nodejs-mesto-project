@@ -2,10 +2,14 @@ import { Router } from 'express';
 
 import { login } from '../controllers/auth';
 import { createUser } from '../controllers/users';
+import { createUserSchema, createLoginSchema } from '../middlewares/validators';
+import { AUTH_ROUTES } from '../const';
 
 const authRouter = Router();
 
-authRouter.post('/signin', login);
-authRouter.post('/signup', createUser);
+authRouter.post(AUTH_ROUTES.SIGNIN, createLoginSchema);
+authRouter.post(AUTH_ROUTES.SIGNIN, login);
+authRouter.post(AUTH_ROUTES.SIGNUP, createUserSchema);
+authRouter.post(AUTH_ROUTES.SIGNUP, createUser);
 
 export default authRouter;
