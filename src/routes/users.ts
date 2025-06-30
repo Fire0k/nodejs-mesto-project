@@ -9,8 +9,6 @@ import { USER_ROUTES } from '../const';
 const usersRouter = Router();
 
 usersRouter.get('/', getAllUsers);
-usersRouter.get(USER_ROUTES.BY_ID, getUserByIdSchema);
-usersRouter.get(USER_ROUTES.BY_ID, getUserById);
 
 const profileRouter = Router();
 
@@ -21,5 +19,8 @@ profileRouter.patch(USER_ROUTES.AVATAR, updateAvatar);
 profileRouter.get('/', getProfile);
 
 usersRouter.use(USER_ROUTES.PROFILE, profileRouter);
+
+usersRouter.get(USER_ROUTES.BY_ID, getUserByIdSchema);
+usersRouter.get(USER_ROUTES.BY_ID, getUserById);
 
 export default usersRouter;

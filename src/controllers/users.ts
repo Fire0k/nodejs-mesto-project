@@ -130,7 +130,7 @@ export const updateAvatar = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-export const getProfile = async (req: Request, _res: Response, next: NextFunction) => {
+export const getProfile = async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user?._id;
 
   try {
@@ -139,6 +139,8 @@ export const getProfile = async (req: Request, _res: Response, next: NextFunctio
     if (!user) {
       throw new NotFoundError('Пользователь по указанному _id не найден');
     }
+
+    res.send(user);
   } catch (error: any) {
     next(error);
   }
