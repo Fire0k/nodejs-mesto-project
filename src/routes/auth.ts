@@ -7,9 +7,7 @@ import { AUTH_ROUTES } from '../const';
 
 const authRouter = Router();
 
-authRouter.post(AUTH_ROUTES.SIGNIN, createLoginSchema);
-authRouter.post(AUTH_ROUTES.SIGNIN, login);
-authRouter.post(AUTH_ROUTES.SIGNUP, createUserSchema);
-authRouter.post(AUTH_ROUTES.SIGNUP, createUser);
+authRouter.post(AUTH_ROUTES.SIGNIN, createLoginSchema, login);
+authRouter.post(AUTH_ROUTES.SIGNUP, createUserSchema, createUser);
 
 export default authRouter;

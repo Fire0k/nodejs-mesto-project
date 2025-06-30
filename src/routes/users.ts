@@ -12,15 +12,12 @@ usersRouter.get('/', getAllUsers);
 
 const profileRouter = Router();
 
-profileRouter.patch('/', updateProfileSchema);
-profileRouter.patch('/', updateProfile);
-profileRouter.patch(USER_ROUTES.AVATAR, updateAvatarSchema);
-profileRouter.patch(USER_ROUTES.AVATAR, updateAvatar);
+profileRouter.patch('/', updateProfileSchema, updateProfile);
+profileRouter.patch(USER_ROUTES.AVATAR, updateAvatarSchema, updateAvatar);
 profileRouter.get('/', getProfile);
 
 usersRouter.use(USER_ROUTES.PROFILE, profileRouter);
 
-usersRouter.get(USER_ROUTES.BY_ID, getUserByIdSchema);
-usersRouter.get(USER_ROUTES.BY_ID, getUserById);
+usersRouter.get(USER_ROUTES.BY_ID, getUserByIdSchema, getUserById);
 
 export default usersRouter;

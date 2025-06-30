@@ -9,6 +9,6 @@ export const createCardSchema = celebrate({
 
 export const deleteCardByIdSchema = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required().alphanum().length(24),
+    cardId: Joi.string().required().length(24).hex(),
   }),
 });

@@ -11,7 +11,7 @@ export const getAllCards = async (_req: Request, res: Response, next: NextFuncti
     const cards = await cardModel.find({});
 
     res.send(cards);
-  } catch (error: any) {
+  } catch (error) {
     next(error);
   }
 };
@@ -29,7 +29,7 @@ export const createCard = async (req: Request, res: Response, next: NextFunction
     });
 
     res.status(constants.HTTP_STATUS_CREATED).send(createdCard);
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof MongooseError.ValidationError) {
       next(new BadRequestError('Переданы некорректные данные при создании карточки'));
       return;
@@ -59,7 +59,7 @@ export const deleteCardById = async (req: Request, res: Response, next: NextFunc
     }
 
     res.send(deletedCard);
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof MongooseError.CastError) {
       next(new NotFoundError('Карточка с указанным _id не найдена'));
       return;
@@ -84,7 +84,7 @@ export const likeCard = async (req: Request, res: Response, next: NextFunction) 
     }
 
     res.send(updatedCard);
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof MongooseError.CastError) {
       next(new NotFoundError('Карточка с указанным _id не найдена'));
       return;
@@ -114,7 +114,7 @@ export const dislikeCard = async (req: Request, res: Response, next: NextFunctio
     }
 
     res.send(updatedCard);
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof MongooseError.CastError) {
       next(new NotFoundError('Карточка с указанным _id не найдена'));
       return;

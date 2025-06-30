@@ -24,11 +24,11 @@ app.use(authHandler);
 
 app.use('/', router);
 
+app.use(pageNotFoundHandler);
+
 app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
-
-app.use(pageNotFoundHandler);
 
 const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
 

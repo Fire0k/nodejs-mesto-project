@@ -12,7 +12,7 @@ export const getAllUsers = async (_req: Request, res: Response, next: NextFuncti
     const users = await userModel.find({});
 
     res.send(users);
-  } catch (error: any) {
+  } catch (error) {
     next(error);
   }
 };
@@ -26,7 +26,7 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
     }
 
     res.send(user);
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof MongooseError.CastError) {
       next(new NotFoundError('Пользователь по указанному _id не найден'));
       return;
@@ -86,7 +86,7 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
     }
 
     res.send(updatedUser);
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof MongooseError.CastError) {
       next(new NotFoundError('Пользователь по указанному _id не найден'));
       return;
@@ -115,7 +115,7 @@ export const updateAvatar = async (req: Request, res: Response, next: NextFuncti
     }
 
     res.send(updatedUser);
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof MongooseError.CastError) {
       next(new NotFoundError('Пользователь по указанному _id не найден'));
       return;
@@ -141,7 +141,7 @@ export const getProfile = async (req: Request, res: Response, next: NextFunction
     }
 
     res.send(user);
-  } catch (error: any) {
+  } catch (error) {
     next(error);
   }
 };

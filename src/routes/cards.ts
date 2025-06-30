@@ -9,13 +9,11 @@ import { CARD_ROUTES } from '../const';
 const cardsRouter = Router();
 
 cardsRouter.get('/', getAllCards);
-cardsRouter.post('/', createCardSchema);
-cardsRouter.post('/', createCard);
+cardsRouter.post('/', createCardSchema, createCard);
 
 const cardByIdRouter = Router({ mergeParams: true });
 
-cardByIdRouter.delete('/', deleteCardByIdSchema);
-cardByIdRouter.delete('/', deleteCardById);
+cardByIdRouter.delete('/', deleteCardByIdSchema, deleteCardById);
 cardByIdRouter.put(CARD_ROUTES.LIKES, likeCard);
 cardByIdRouter.delete(CARD_ROUTES.LIKES, dislikeCard);
 
