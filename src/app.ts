@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import mongoose from 'mongoose';
 import { errors } from 'celebrate';
+import cors from 'cors';
 
 import router, { authRouter } from './routes';
 import {
@@ -14,6 +15,11 @@ import {
 } from './middlewares';
 
 const app = express();
+
+app.use(cors({
+  origin: 'https://fireok.nomorepartiessbs.ru',
+  credentials: true,
+}));
 
 app.use(parseRequest);
 

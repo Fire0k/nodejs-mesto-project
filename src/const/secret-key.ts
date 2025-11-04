@@ -1,1 +1,1 @@
-export const JWT_SECRET_KEY = 'secret-key';
+export const { JWT_SECRET_KEY = 'secret-key' } = process.env;
